@@ -63,27 +63,41 @@ while (true) {
 
   const { room } = await response.json();
 
-  const headPositionCoordinates = room.players[0].fromHeadPosition[0];
-  const bodyPositionCoordinates = room.players[0].fromHeadPosition[1];
+  const secondPartBodyPositionCoordinates = room.players[0].fromHeadPosition[1];
+  const [headPositionCoordinates, ...bodyWithoutHeadCoordinates] =
+    room.players[0].fromHeadPosition;
   const roomSize = { width: room.width - 1, height: room.height - 1 };
 
+  console.log(bodyWithoutHeadCoordinates);
+
   const direction =
-    bodyPositionCoordinates.x === headPositionCoordinates.x - 1 &&
-    bodyPositionCoordinates.y === headPositionCoordinates.y
+    secondPartBodyPositionCoordinates.x === headPositionCoordinates.x - 1 &&
+    secondPartBodyPositionCoordinates.y === headPositionCoordinates.y
       ? "right"
-      : bodyPositionCoordinates.y === headPositionCoordinates.y - 1 &&
-        bodyPositionCoordinates.x === headPositionCoordinates.x
+      : secondPartBodyPositionCoordinates.y === headPositionCoordinates.y - 1 &&
+        secondPartBodyPositionCoordinates.x === headPositionCoordinates.x
       ? "down"
-      : bodyPositionCoordinates.x === headPositionCoordinates.x + 1 &&
-        bodyPositionCoordinates.y === headPositionCoordinates.y
+      : secondPartBodyPositionCoordinates.x === headPositionCoordinates.x + 1 &&
+        secondPartBodyPositionCoordinates.y === headPositionCoordinates.y
       ? "left"
-      : bodyPositionCoordinates.y === headPositionCoordinates.y + 1 &&
-        bodyPositionCoordinates.x === headPositionCoordinates.x
-      ? "top"
+      : secondPartBodyPositionCoordinates.y === headPositionCoordinates.y + 1 &&
+        secondPartBodyPositionCoordinates.x === headPositionCoordinates.x
+      ? "up"
       : "";
 
-  console.log(headPositionCoordinates, roomSize);
-  console.log(direction);
+  const isGoingOnLeftSide =
+    headPositionCoordinates.x === 0 && direction === "up";
+  const isGoingOnRightSide =
+    headPositionCoordinates.x === roomSize.width && direction === "down";
+  const isGoingOnTopSide =
+    headPositionCoordinates.y === 0 && direction === "right";
+  const isGoingOnBottomSide =
+    headPositionCoordinates.y === roomSize.height && direction === "left";
+
+  const foodPositions = room.food;
+
+  console.log(roomSize, headPositionCoordinates);
+  console.log(isGoingOnRightSide);
 
   if (direction === "right" && headPositionCoordinates.x === roomSize.width) {
     action = "right";
@@ -94,12 +108,24 @@ while (true) {
     action = "right";
   } else if (direction === "left" && headPositionCoordinates.x === 0) {
     action = "right";
-  } else if (direction === "top" && headPositionCoordinates.y === 0) {
+  } else if (direction === "up" && headPositionCoordinates.y === 0) {
     action = "right";
   } else {
     action = "forward";
-    if (Math.random() < 0.2) {
-      action = "right";
+
+    if (isGoingOnLeftSide || isGoingOnRightSide) {
+      foodPositions.forEach((apple) => {
+        if (apple.position.y === headPositionCoordinates.y) {
+          action = "right";
+        }
+      });
+    }
+    if (isGoingOnTopSide || isGoingOnBottomSide) {
+      foodPositions.forEach((apple) => {
+        if (apple.position.x === headPositionCoordinates.x) {
+          action = "right";
+        }
+      });
     }
   }
 }
