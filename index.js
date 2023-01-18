@@ -95,21 +95,28 @@ while (true) {
 
   const foodPositions = room.food;
 
-  let isBarrierLeft = false;
-  let isBarrierRight = false;
-  let isBarrierTop = false;
-  let isBarrierBottom = false;
+  let barriers = {
+    isBarrierLeft: false,
+    isBarrierRight: false,
+    isBarrierTop: false,
+    isBarrierBottom: false,
+  };
+
+  // let isBarrierLeft = false;
+  // let isBarrierRight = false;
+  // let isBarrierTop = false;
+  // let isBarrierBottom = false;
 
   room.players.forEach((player) => {
     player.fromHeadPosition.forEach((bodyPart) => {
       if (bodyPart.y === headPositionCoordinates.y + 1) {
-        isBarrierBottom = true;
+        barriers.isBarrierBottom = true;
       } else if (bodyPart.y === headPositionCoordinates.y - 1) {
-        isBarrierTop = true;
+        barriers.isBarrierTop = true;
       } else if (bodyPart.x === headPositionCoordinates.x + 1) {
-        isBarrierRight = true;
+        barriers.isBarrierRight = true;
       } else if (bodyPart.x === headPositionCoordinates.x - 1) {
-        isBarrierLeft = true;
+        barriers.isBarrierLeft = true;
       }
     });
   });
@@ -117,25 +124,27 @@ while (true) {
     headPositionCoordinates.y + 1 === roomSize.height + 1 &&
     direction === "down"
   ) {
-    isBarrierTop = true;
+    barriers.isBarrierTop = true;
   } else if (headPositionCoordinates.y === 0 && direction === "up") {
-    isBarrierTop = true;
+    barriers.isBarrierTop = true;
   } else if (headPositionCoordinates.x === 0 && direction === "left") {
-    isBarrierLeft = true;
+    barriers.isBarrierLeft = true;
   } else if (
     headPositionCoordinates.x === roomSize.width &&
     direction === "right"
   ) {
-    isBarrierRight = true;
+    barriers.isBarrierRight = true;
   }
 
-  console.log({ isBarrierLeft, isBarrierRight, isBarrierTop, isBarrierBottom });
+  // const turningOptions = turningAction(direction, turnLeft);
 
-  if (!isBarrierTop) {
-    action = "forward";
-  } else {
-    action = "turn right";
-  }
+  console.log(barriers);
+
+  // if (!isBarrierTop) {
+  //   action = "forward";
+  // } else {
+  //   action = "turn right";
+  // }
 
   // if (direction === "right" && headPositionCoordinates.x === roomSize.width) {
   //   action = "turn right";
