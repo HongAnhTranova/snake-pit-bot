@@ -94,34 +94,21 @@ while (true) {
 
   const foodPositions = room.food;
 
-  let isBarrierOnLeft = false;
-  let isBarrierOnRight = false;
-  let isBarrierInFront = false;
-
-  const onFutureLeftPosition = {
-    x:
-      direction === "left"
-        ? headPositionCoordinates.x + 1
-        : direction === "right"
-        ? headPositionCoordinates.x - 1
-        : headPositionCoordinates.x,
-    y:
-      direction === "up"
-        ? headPositionCoordinates.y + 1
-        : direction === "down"
-        ? headPositionCoordinates.y - 1
-        : headPositionCoordinates.y,
-  };
-
-  console.log({ onFutureLeftPosition, headPositionCoordinates, direction });
+  let isBarrierLeft = false;
+  let isBarrierRight = false;
+  let isBarrierTop = false;
+  let isBarrierBottom = false;
 
   room.players.forEach((player) => {
     player.fromHeadPosition.forEach((bodyPart) => {
-      if (
-        bodyPart.x === onFutureLeftPosition.x &&
-        bodyPart.y === onFutureLeftPosition.y
-      ) {
-        isBarrierOnLeft = true;
+      if (bodyPart.y === headPositionCoordinates.y + 1) {
+        isBarrierBottom = true;
+      } else if (bodyPart.y === headPositionCoordinates.y - 1) {
+        isBarrierTop = true;
+      } else if (bodyPart.x === headPositionCoordinates.x + 1) {
+        isBarrierRight = true;
+      } else if (bodyPart.x === headPositionCoordinates.x - 1) {
+        isBarrierLeft = true;
       }
     });
   });
@@ -129,19 +116,21 @@ while (true) {
     headPositionCoordinates.y + 1 === roomSize.height + 1 &&
     direction === "down"
   ) {
-    isBarrierInFront = true;
+    isBarrierTop = true;
   } else if (headPositionCoordinates.y === 0 && direction === "up") {
-    isBarrierInFront = true;
+    isBarrierTop = true;
   } else if (headPositionCoordinates.x === 0 && direction === "left") {
-    isBarrierOnLeft = true;
+    isBarrierLeft = true;
   } else if (
     headPositionCoordinates.x === roomSize.width &&
     direction === "right"
   ) {
-    isBarrierOnRight = true;
+    isBarrierRight = true;
   }
 
-  if (!isBarrierInFront) {
+  console.log({ isBarrierLeft, isBarrierRight, isBarrierTop, isBarrierBottom });
+
+  if (!isBarrierTop) {
     action = "forward";
   } else {
     action = "right";
