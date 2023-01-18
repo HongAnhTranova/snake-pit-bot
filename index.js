@@ -63,9 +63,43 @@ while (true) {
 
   const { room } = await response.json();
 
-  const coordinates = room.players[0].fromHeadPosition;
+  const headPositionCoordinates = room.players[0].fromHeadPosition[0];
+  const bodyPositionCoordinates = room.players[0].fromHeadPosition[1];
+  const roomSize = { width: room.width - 1, height: room.height - 1 };
 
-  console.log(coordinates);
+  const direction =
+    bodyPositionCoordinates.x === headPositionCoordinates.x - 1 &&
+    bodyPositionCoordinates.y === headPositionCoordinates.y
+      ? "right"
+      : bodyPositionCoordinates.y === headPositionCoordinates.y - 1 &&
+        bodyPositionCoordinates.x === headPositionCoordinates.x
+      ? "down"
+      : bodyPositionCoordinates.x === headPositionCoordinates.x + 1 &&
+        bodyPositionCoordinates.y === headPositionCoordinates.y
+      ? "left"
+      : bodyPositionCoordinates.y === headPositionCoordinates.y + 1 &&
+        bodyPositionCoordinates.x === headPositionCoordinates.x
+      ? "top"
+      : "";
 
-  action = Math.random() > 0.3 ? "forward" : "right";
+  console.log(headPositionCoordinates, roomSize);
+  console.log(direction);
+
+  if (direction === "right" && headPositionCoordinates.x === roomSize.width) {
+    action = "right";
+  } else if (
+    direction === "down" &&
+    headPositionCoordinates.y === roomSize.height
+  ) {
+    action = "right";
+  } else if (direction === "left" && headPositionCoordinates.x === 0) {
+    action = "right";
+  } else if (direction === "top" && headPositionCoordinates.y === 0) {
+    action = "right";
+  } else {
+    action = "forward";
+    if (Math.random() < 0.2) {
+      action = "right";
+    }
+  }
 }
