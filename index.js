@@ -68,8 +68,6 @@ while (true) {
     room.players[0].fromHeadPosition;
   const roomSize = { width: room.width - 1, height: room.height - 1 };
 
-  console.log(bodyWithoutHeadCoordinates);
-
   const direction =
     secondPartBodyPositionCoordinates.x === headPositionCoordinates.x - 1 &&
     secondPartBodyPositionCoordinates.y === headPositionCoordinates.y
@@ -96,36 +94,75 @@ while (true) {
 
   const foodPositions = room.food;
 
-  console.log(roomSize, headPositionCoordinates);
-  console.log(isGoingOnRightSide);
+  let isBarrierLeft = false;
+  let isBarrierRight = false;
+  let isBarrierTop = false;
+  let isBarrierBottom = false;
 
-  if (direction === "right" && headPositionCoordinates.x === roomSize.width) {
-    action = "right";
-  } else if (
-    direction === "down" &&
-    headPositionCoordinates.y === roomSize.height
+  room.players.forEach((player) => {
+    player.fromHeadPosition.forEach((bodyPart) => {
+      if (bodyPart.y === headPositionCoordinates.y + 1) {
+        isBarrierBottom = true;
+      } else if (bodyPart.y === headPositionCoordinates.y - 1) {
+        isBarrierTop = true;
+      } else if (bodyPart.x === headPositionCoordinates.x + 1) {
+        isBarrierRight = true;
+      } else if (bodyPart.x === headPositionCoordinates.x - 1) {
+        isBarrierLeft = true;
+      }
+    });
+  });
+  if (
+    headPositionCoordinates.y + 1 === roomSize.height + 1 &&
+    direction === "down"
   ) {
-    action = "right";
-  } else if (direction === "left" && headPositionCoordinates.x === 0) {
-    action = "right";
-  } else if (direction === "up" && headPositionCoordinates.y === 0) {
-    action = "right";
-  } else {
-    action = "forward";
-
-    if (isGoingOnLeftSide || isGoingOnRightSide) {
-      foodPositions.forEach((apple) => {
-        if (apple.position.y === headPositionCoordinates.y) {
-          action = "right";
-        }
-      });
-    }
-    if (isGoingOnTopSide || isGoingOnBottomSide) {
-      foodPositions.forEach((apple) => {
-        if (apple.position.x === headPositionCoordinates.x) {
-          action = "right";
-        }
-      });
-    }
+    isBarrierTop = true;
+  } else if (headPositionCoordinates.y === 0 && direction === "up") {
+    isBarrierTop = true;
+  } else if (headPositionCoordinates.x === 0 && direction === "left") {
+    isBarrierLeft = true;
+  } else if (
+    headPositionCoordinates.x === roomSize.width &&
+    direction === "right"
+  ) {
+    isBarrierRight = true;
   }
+
+  console.log({ isBarrierLeft, isBarrierRight, isBarrierTop, isBarrierBottom });
+
+  if (!isBarrierTop) {
+    action = "forward";
+  } else {
+    action = "right";
+  }
+
+  // if (direction === "right" && headPositionCoordinates.x === roomSize.width) {
+  //   action = "right";
+  // } else if (
+  //   direction === "down" &&
+  //   headPositionCoordinates.y === roomSize.height
+  // ) {
+  //   action = "right";
+  // } else if (direction === "left" && headPositionCoordinates.x === 0) {
+  //   action = "right";
+  // } else if (direction === "up" && headPositionCoordinates.y === 0) {
+  //   action = "right";
+  // } else {
+  //   action = "forward";
+
+  //   if (isGoingOnLeftSide || isGoingOnRightSide) {
+  //     foodPositions.forEach((apple) => {
+  //       if (apple.position.y === headPositionCoordinates.y) {
+  //         action = "right";
+  //       }
+  //     });
+  //   }
+  //   if (isGoingOnTopSide || isGoingOnBottomSide) {
+  //     foodPositions.forEach((apple) => {
+  //       if (apple.position.x === headPositionCoordinates.x) {
+  //         action = "right";
+  //       }
+  //     });
+  //   }
+  // }
 }
