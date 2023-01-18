@@ -133,34 +133,34 @@ while (true) {
   if (!isBarrierTop) {
     action = "forward";
   } else {
-    action = "right";
+    action = "turn right";
   }
 
   // if (direction === "right" && headPositionCoordinates.x === roomSize.width) {
-  //   action = "right";
+  //   action = "turn right";
   // } else if (
   //   direction === "down" &&
   //   headPositionCoordinates.y === roomSize.height
   // ) {
-  //   action = "right";
+  //   action = "turn right";
   // } else if (direction === "left" && headPositionCoordinates.x === 0) {
-  //   action = "right";
+  //   action = "turn right";
   // } else if (direction === "up" && headPositionCoordinates.y === 0) {
-  //   action = "right";
+  //   action = "turn right";
   // } else {
   //   action = "forward";
 
   //   if (isGoingOnLeftSide || isGoingOnRightSide) {
   //     foodPositions.forEach((apple) => {
   //       if (apple.position.y === headPositionCoordinates.y) {
-  //         action = "right";
+  //         action = "turn right";
   //       }
   //     });
   //   }
   //   if (isGoingOnTopSide || isGoingOnBottomSide) {
   //     foodPositions.forEach((apple) => {
   //       if (apple.position.x === headPositionCoordinates.x) {
-  //         action = "right";
+  //         action = "turn right";
   //       }
   //     });
   //   }
