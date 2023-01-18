@@ -68,6 +68,7 @@ while (true) {
     room.players[0].fromHeadPosition;
   const roomSize = { width: room.width - 1, height: room.height - 1 };
 
+  //direction of the snake
   const direction =
     secondPartBodyPositionCoordinates.x === headPositionCoordinates.x - 1 &&
     secondPartBodyPositionCoordinates.y === headPositionCoordinates.y
