@@ -45,6 +45,7 @@ const roomId = rooms.find(
 ).id;
 
 let action = "forward";
+
 while (true) {
   const payload = {
     playerToken,
@@ -61,14 +62,23 @@ while (true) {
     }
   );
 
-  const { room } = await response.json();
+  const { room, yourPlayerId } = await response.json();
+
+  function redirectToplaygroundUrl() {
+    const url = `https://snake-pit.onrender.com/player/?id=${yourPlayerId}`;
+    return window.open(`${url} `);
+  }
+
+  document
+    .getElementById("button")
+    .addEventListener("click", redirectToplaygroundUrl);
 
   const secondPartBodyPositionCoordinates = room.players[0].fromHeadPosition[1];
   const [headPositionCoordinates, ...bodyWithoutHeadCoordinates] =
     room.players[0].fromHeadPosition;
   const roomSize = { width: room.width - 1, height: room.height - 1 };
 
-  console.log(bodyWithoutHeadCoordinates);
+  // console.log(bodyWithoutHeadCoordinates);
 
   const direction =
     secondPartBodyPositionCoordinates.x === headPositionCoordinates.x - 1 &&
@@ -96,8 +106,8 @@ while (true) {
 
   const foodPositions = room.food;
 
-  console.log(roomSize, headPositionCoordinates);
-  console.log(isGoingOnRightSide);
+  // console.log(roomSize, headPositionCoordinates);
+  // console.log(isGoingOnRightSide);
 
   if (direction === "right" && headPositionCoordinates.x === roomSize.width) {
     action = "right";
