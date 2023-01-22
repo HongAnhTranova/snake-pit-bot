@@ -8,7 +8,7 @@ if (localStorage.getItem("token") === null) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: "The best snake ever",
+        name: "Dumbass",
       }),
     }
   );
@@ -69,110 +69,37 @@ while (true) {
   const roomSize = { width: room.width - 1, height: room.height - 1 };
 
   //direction of the snake
-  const direction =
+  const directionNumber =
     secondPartBodyPositionCoordinates.x === headPositionCoordinates.x - 1 &&
     secondPartBodyPositionCoordinates.y === headPositionCoordinates.y
-      ? "right"
+      ? 1
       : secondPartBodyPositionCoordinates.y === headPositionCoordinates.y - 1 &&
         secondPartBodyPositionCoordinates.x === headPositionCoordinates.x
-      ? "down"
+      ? -1
       : secondPartBodyPositionCoordinates.x === headPositionCoordinates.x + 1 &&
         secondPartBodyPositionCoordinates.y === headPositionCoordinates.y
-      ? "left"
+      ? -1
       : secondPartBodyPositionCoordinates.y === headPositionCoordinates.y + 1 &&
         secondPartBodyPositionCoordinates.x === headPositionCoordinates.x
-      ? "up"
-      : "";
+      ? 1
+      : 0;
 
-  const isGoingOnLeftSide =
-    headPositionCoordinates.x === 0 && direction === "up";
-  const isGoingOnRightSide =
-    headPositionCoordinates.x === roomSize.width && direction === "down";
-  const isGoingOnTopSide =
-    headPositionCoordinates.y === 0 && direction === "right";
-  const isGoingOnBottomSide =
-    headPositionCoordinates.y === roomSize.height && direction === "left";
+  let outsitePlaygorund = false;
 
-  const foodPositions = room.food;
-
-  let barriers = {
-    isBarrierLeft: false,
-    isBarrierRight: false,
-    isBarrierTop: false,
-    isBarrierBottom: false,
-  };
-
-  // let isBarrierLeft = false;
-  // let isBarrierRight = false;
-  // let isBarrierTop = false;
-  // let isBarrierBottom = false;
-
-  room.players.forEach((player) => {
-    player.fromHeadPosition.forEach((bodyPart) => {
-      if (bodyPart.y === headPositionCoordinates.y + 1) {
-        barriers.isBarrierBottom = true;
-      } else if (bodyPart.y === headPositionCoordinates.y - 1) {
-        barriers.isBarrierTop = true;
-      } else if (bodyPart.x === headPositionCoordinates.x + 1) {
-        barriers.isBarrierRight = true;
-      } else if (bodyPart.x === headPositionCoordinates.x - 1) {
-        barriers.isBarrierLeft = true;
-      }
-    });
-  });
   if (
-    headPositionCoordinates.y + 1 === roomSize.height + 1 &&
-    direction === "down"
+    (headPositionCoordinates.y === roomSize.height && directionNumber === -1) ||
+    (headPositionCoordinates.x === roomSize.width && directionNumber === 1) ||
+    (headPositionCoordinates.x === 0 && directionNumber === -1) ||
+    (headPositionCoordinates.y === 0 && directionNumber === 1)
   ) {
-    barriers.isBarrierTop = true;
-  } else if (headPositionCoordinates.y === 0 && direction === "up") {
-    barriers.isBarrierTop = true;
-  } else if (headPositionCoordinates.x === 0 && direction === "left") {
-    barriers.isBarrierLeft = true;
-  } else if (
-    headPositionCoordinates.x === roomSize.width &&
-    direction === "right"
-  ) {
-    barriers.isBarrierRight = true;
+    outsitePlaygorund = true;
   }
 
-  // const turningOptions = turningAction(direction, turnLeft);
+  if (outsitePlaygorund) {
+    action = "right";
+  } else {
+    action = "forward";
+  }
 
-  console.log(barriers);
-
-  // if (!isBarrierTop) {
-  //   action = "forward";
-  // } else {
-  //   action = "turn right";
-  // }
-
-  // if (direction === "right" && headPositionCoordinates.x === roomSize.width) {
-  //   action = "turn right";
-  // } else if (
-  //   direction === "down" &&
-  //   headPositionCoordinates.y === roomSize.height
-  // ) {
-  //   action = "turn right";
-  // } else if (direction === "left" && headPositionCoordinates.x === 0) {
-  //   action = "turn right";
-  // } else if (direction === "up" && headPositionCoordinates.y === 0) {
-  //   action = "turn right";
-  // } else {
-  //   action = "forward";
-
-  //   if (isGoingOnLeftSide || isGoingOnRightSide) {
-  //     foodPositions.forEach((apple) => {
-  //       if (apple.position.y === headPositionCoordinates.y) {
-  //         action = "turn right";
-  //       }
-  //     });
-  //   }
-  //   if (isGoingOnTopSide || isGoingOnBottomSide) {
-  //     foodPositions.forEach((apple) => {
-  //       if (apple.position.x === headPositionCoordinates.x) {
-  //         action = "turn right";
-  //       }
-  //     });
-  //   }
-  // }
+  console.log({ directionNumber, outsitePlaygorund });
 }
